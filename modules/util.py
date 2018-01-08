@@ -2,10 +2,44 @@ import vtk
 import os
 from vtk.util import numpy_support
 import numpy as np
+import json
 
 def mkdir(fn):
     if not os.path.exists(os.path.abspath(fn)):
         os.mkdir(os.path.abspath(fn))
+
+def load_json(fn):
+    with open(fn) as f:
+        return json.load(f)
+
+def save_json(fn, data):
+    with open(fn, 'w') as outfile:
+        json.dump(data, outfile)
+
+def args_to_dict(args):
+    keys = args[::2]
+    vals = args[1::2]
+    d = {}
+    for k,v in zip(keys,vals): d[k] = v
+    return d
+
+def convert_to_json_list(paths_file, output_directory):
+    if ".paths" in paths_file:
+        d = parsePathFile(paths_file)
+        d = convert_path_dict(d)
+    else:
+        raise RuntimeError("Unsupported paths_file type".format(paths_file))
+
+    files_file = output_directory+"/path_files.txt"
+    f = open(files_file,'w')
+    dir_ = output_directory+'/path'
+    mkdir(dir_)
+    for i in range(len(d)):
+        fn = os.path.abspath(dir_+'/{}.json'.format(i))
+        save_json(fn, d[i])
+        f.write(fn+"\n")
+    f.close()
+    return files_file
 
 def load_mha(filename):
     reader = vtk.vtkMetaImageReader()
@@ -99,11 +133,11 @@ def convert_path_dict(path_dict):
         p_points = path_dict[p_id]['points']
         for i in range(len(p_points)):
             v = p_points[i]
-            d = {"path_id":p_id, "path_name":p_name, "point":i, "p":v[:3],
-                "n":v[3:6],"x":v[6:]}
+            d = {"name":p_name+"."+p_id, "point":i, "p":list(v[:3]),
+                "n":list(v[3:6]),"x":list(v[6:])}
             points.append(d)
     return points
-    
+
 def denormalizeContour(c,p,t,tx):
     """
     uses simvascular path info to transform a contour from 2d to 3d
