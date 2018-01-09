@@ -15,6 +15,11 @@ parser.add_argument('method')
 parser.add_argument('--m',nargs="*")
 args = parser.parse_args()
 
+#TODO: Split into two scripts, one that processes paths file/directory
+# other just assumes list of jsons passed
+
+#TODO: Slice (2D and 3D) and Oblique mode
+
 print args.m
 if args.m == None:
     args.m = {}
