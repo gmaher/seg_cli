@@ -3,6 +3,7 @@ import os
 from vtk.util import numpy_support
 import numpy as np
 import json
+import scipy
 
 def mkdir(fn):
     if not os.path.exists(os.path.abspath(fn)):
@@ -16,6 +17,18 @@ def save_json(fn, data):
     with open(fn, 'w') as outfile:
         json.dump(data, outfile)
 
+def numpy_to_json(arr):
+    if len(arr.shape) == 2:
+        #2D
+        pass
+    if len(arr.shape) == 3:
+        #3d
+        pass
+    if len(arr.shape) == 4:
+        #4d
+        pass
+    raise RuntimeError("numpy_to_json not implemented yet")
+
 def args_to_dict(args):
     keys = args[::2]
     vals = args[1::2]
@@ -23,6 +36,24 @@ def args_to_dict(args):
     for k,v in zip(keys,vals): d[k] = v
     return d
 
+def save_output(output,filename):
+    """
+    output: numpy array
+    filename: string ending in .extension
+    """
+
+    if ".npy" in filename:
+        np.save(filename,output)
+    elif ".png" in filename:
+        scipy.misc.imsave(filename,output)
+    elif ".jpg" in filename:
+        scipy.misc.imsave(filename,output)
+    elif ".json" in filename:
+        o_json = numpy_to_json(output)
+        save_json(filename,o_json)
+    else:
+        raise RuntimeError("Unsupported output file type {}".format(filename))
+        
 def convert_to_json_list(paths_file, output_directory):
     if ".paths" in paths_file:
         d = parsePathFile(paths_file)

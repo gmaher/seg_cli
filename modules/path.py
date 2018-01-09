@@ -13,3 +13,6 @@ class SVPath(object):
             return load_json(filename)
         else:
             raise RuntimeError("Unsupported file type {}".format(filename))
+
+    def get_path_points(self):
+        return self.path_points.copy[:]

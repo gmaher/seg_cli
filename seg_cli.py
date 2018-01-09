@@ -1,5 +1,6 @@
 import os
 import sys
+import importlib
 import argparse
 
 from modules.util import args_to_dict, convert_to_json_list
@@ -12,6 +13,7 @@ parser.add_argument('image')
 parser.add_argument('paths')
 parser.add_argument('output_directory')
 parser.add_argument('method')
+parser.add_argument('output_file_type')
 parser.add_argument('--m',nargs="*")
 args = parser.parse_args()
 
@@ -19,6 +21,9 @@ args = parser.parse_args()
 # other just assumes list of jsons passed
 
 #TODO: Slice (2D and 3D) and Oblique mode
+
+#TODO: Segmenters can output numpy arrays and use standard storage,
+#otherwise they must implement their own
 
 print args.m
 if args.m == None:
@@ -37,3 +42,8 @@ if not ".txt" in args.paths:
     args.paths = convert_to_json_list(args.paths, args.output_directory)
 
 sv_path  = SVPath(args.paths)
+
+#Get method
+Segmenter_class = importlib.("Segmenter",args.method)
+segmenter = Segmenter_class(args.m,args.output_directory,args.output_file_type)
+segmenter.run(sv_image, sv_path)
