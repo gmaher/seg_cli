@@ -3,7 +3,8 @@ import os
 from vtk.util import numpy_support
 import numpy as np
 import json
-import scipy
+from scipy.misc import imsave
+from vtk import vtkImageExport
 
 def mkdir(fn):
     if not os.path.exists(os.path.abspath(fn)):
@@ -45,15 +46,15 @@ def save_output(output,filename):
     if ".npy" in filename:
         np.save(filename,output)
     elif ".png" in filename:
-        scipy.misc.imsave(filename,output)
+        imsave(filename,output)
     elif ".jpg" in filename:
-        scipy.misc.imsave(filename,output)
+        imsave(filename,output)
     elif ".json" in filename:
         o_json = numpy_to_json(output)
         save_json(filename,o_json)
     else:
         raise RuntimeError("Unsupported output file type {}".format(filename))
-        
+
 def convert_to_json_list(paths_file, output_directory):
     if ".paths" in paths_file:
         d = parsePathFile(paths_file)
@@ -164,7 +165,7 @@ def convert_path_dict(path_dict):
         p_points = path_dict[p_id]['points']
         for i in range(len(p_points)):
             v = p_points[i]
-            d = {"name":p_name+"."+p_id, "point":i, "p":list(v[:3]),
+            d = {"name":p_name+"."+p_id+"."+str(i), "p":list(v[:3]),
                 "n":list(v[3:6]),"x":list(v[6:])}
             points.append(d)
     return points
@@ -344,7 +345,7 @@ def getImageReslice(img, ext, p, n, x, spacing, asnumpy=False):
 
     args:
         @a img: vtk image (3 dimensional)
-        @a ext: extent of the reslice plane [Xext,Yext]
+        @a ext: extent of the reslice plane
         @a p ((x,y,z)): origin of the plane
         @a n ((x,y,z)): vector normal to plane
         @a x ((x,y,z)): x-axis in the plane
@@ -365,12 +366,12 @@ def getImageReslice(img, ext, p, n, x, spacing, asnumpy=False):
         x[0],x[1],x[2],y[0],y[1],y[2],n[0],n[1],n[2])
     reslice.SetResliceAxesOrigin(p[0],p[1],p[2])
 
-    px = spacing*ext[0]
-    py = spacing*ext[1]
+    px = spacing*ext
+    py = spacing*ext
 
     reslice.SetOutputSpacing((spacing,spacing,spacing))
     reslice.SetOutputOrigin(-0.5*px,-0.5*py,0.0)
-    reslice.SetOutputExtent(0,ext[0],0,ext[1],0,0)
+    reslice.SetOutputExtent(0,ext,0,ext,0,0)
 
     reslice.Update()
     if asnumpy:

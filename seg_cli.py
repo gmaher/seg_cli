@@ -25,6 +25,8 @@ args = parser.parse_args()
 #TODO: Segmenters can output numpy arrays and use standard storage,
 #otherwise they must implement their own
 
+#TODO: Essentially need image class with extraction methods, wrapper for vtk
+
 print args.m
 if args.m == None:
     args.m = {}
@@ -44,6 +46,8 @@ if not ".txt" in args.paths:
 sv_path  = SVPath(args.paths)
 
 #Get method
-Segmenter_class = importlib.("Segmenter",args.method)
+method = "methods."+args.method
+print "Using method {}".format(method)
+Segmenter_class = importlib.import_module(method).Segmenter
 segmenter = Segmenter_class(args.m,args.output_directory,args.output_file_type)
 segmenter.run(sv_image, sv_path)

@@ -17,10 +17,16 @@ class SVImage(object):
         else:
             raise RuntimeError("Unsupported image type {}".format(filename))
 
-    def get_reslice(p,n,x,spacing):
+    def get_reslice(self,extent,p,n,x,spacing):
         """
         p: 3d point in space
         n: normal vector to the reslice
         x: x-axis vector of the reslice
         """
-        return getImageReslice(self.vtk_image, p, n, x, spacing, asnumpy=True)
+        return getImageReslice(img=self.vtk_image,
+            ext=extent-1,
+            p=p,
+            n=n,
+            x=x,
+            spacing=spacing,
+            asnumpy=True)
