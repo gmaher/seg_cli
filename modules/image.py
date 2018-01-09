@@ -30,3 +30,14 @@ class SVImage(object):
             x=x,
             spacing=spacing,
             asnumpy=True)
+    # 
+    # def get_slice(self, extent, p, spacing, plane="axial"):
+    #     if plane == "axial":
+    #
+    #     elif plane == "coronal":
+    #
+    #     elif plane == "saggital":
+    #
+    #
+    # def get_cube(self, extent, p):
+    #

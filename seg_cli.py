@@ -27,6 +27,8 @@ args = parser.parse_args()
 
 #TODO: Essentially need image class with extraction methods, wrapper for vtk
 
+#TODO: vtkExtractVOI to extract 2d/3d slices
+
 print args.m
 if args.m == None:
     args.m = {}
