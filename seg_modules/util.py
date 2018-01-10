@@ -18,17 +18,14 @@ def save_json(fn, data):
     with open(fn, 'w') as outfile:
         json.dump(data, outfile)
 
-def numpy_to_json(arr):
-    if len(arr.shape) == 2:
-        #2D
-        pass
-    if len(arr.shape) == 3:
-        #3d
-        pass
-    if len(arr.shape) == 4:
-        #4d
-        pass
-    raise RuntimeError("numpy_to_json not implemented yet")
+def numpy_from_json(filename):
+    arr_list = load_json(filename)
+    arr = np.array(arr)
+    return arr
+
+def numpy_to_json(arr, filename):
+    arr_list = arr.tolist()
+    save_json(filename, arr_list)
 
 def args_to_dict(args):
     keys = args[::2]

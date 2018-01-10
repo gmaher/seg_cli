@@ -9,6 +9,7 @@ from seg_modules.path import SVPath
 #from modules.segment import SVSeg
 
 parser = argparse.ArgumentParser()
+parser.add_argument('mode')
 parser.add_argument('image')
 parser.add_argument('paths')
 parser.add_argument('output_directory')
@@ -16,6 +17,8 @@ parser.add_argument('method')
 parser.add_argument('output_file_type')
 parser.add_argument('--m',nargs="*")
 args = parser.parse_args()
+
+args.output_directory = os.path.abspath(args.output_directory)
 
 #TODO: Split into two scripts, one that processes paths file/directory
 # other just assumes list of jsons passed
@@ -43,7 +46,7 @@ else:
 sv_image = SVImage(args.image)
 
 if not ".txt" in args.paths:
-    args.paths = convert_to_json_list(args.paths, args.output_directory)
+    raise RuntimeError("must supply a .txt file with point files in it as paths argument")
 
 sv_path  = SVPath(args.paths)
 
@@ -51,5 +54,16 @@ sv_path  = SVPath(args.paths)
 method = args.method
 print "Using method {}".format(method)
 Segmenter_class = importlib.import_module(method).Segmenter
-segmenter = Segmenter_class(args.m,args.output_directory,args.output_file_type)
+segmenter = Segmenter_class(args.mode,args.m,args.output_directory,args.output_file_type)
+
+#get environment info
+env_info = {}
+env_info['calling_directory'] = os.getcwd()
+
+this_file_path = __file__
+this_file_name = this_file_dir.split('/')[-1]
+this_file_dir  = this_file_path.replace(this_file_name,'')
+env_info['seg_cli_directory'] = this_file_dir
+
+
 segmenter.run(sv_image, sv_path)
