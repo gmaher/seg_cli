@@ -42,7 +42,6 @@ def save_output(output,filename):
     output: numpy array
     filename: string ending in .extension
     """
-
     if ".npy" in filename:
         np.save(filename,output)
     elif ".png" in filename:

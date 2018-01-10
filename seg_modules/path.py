@@ -15,4 +15,4 @@ class SVPath(object):
             raise RuntimeError("Unsupported file type {}".format(filename))
 
     def get_path_points(self):
-        return self.path_points.copy[:]
+        return self.path_points[:]

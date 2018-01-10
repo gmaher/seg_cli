@@ -3,9 +3,9 @@ import sys
 import importlib
 import argparse
 
-from modules.util import args_to_dict, convert_to_json_list
-from modules.image import SVImage
-from modules.path import SVPath
+from seg_modules.util import args_to_dict, convert_to_json_list
+from seg_modules.image import SVImage
+from seg_modules.path import SVPath
 #from modules.segment import SVSeg
 
 parser = argparse.ArgumentParser()
@@ -48,7 +48,7 @@ if not ".txt" in args.paths:
 sv_path  = SVPath(args.paths)
 
 #Get method
-method = "methods."+args.method
+method = args.method
 print "Using method {}".format(method)
 Segmenter_class = importlib.import_module(method).Segmenter
 segmenter = Segmenter_class(args.m,args.output_directory,args.output_file_type)
