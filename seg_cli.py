@@ -19,6 +19,7 @@ args.o = os.path.abspath(args.o)
 
 #TODO: vtkExtractVOI to extract 2d/3d slices
 
+#TODO: plugin framework? http://martyalchin.com/2008/jan/10/simple-plugin-framework/
 print args.m
 if args.m == None:
     args.m = {}
