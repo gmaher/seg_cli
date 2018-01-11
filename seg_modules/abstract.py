@@ -1,10 +1,10 @@
-from util import save_output, save_json, load_input_image, mkdir
+from util import save_output, save_json, mkdir
 import numpy as np
 
 class AbstractSegmenter(object):
-    def __init__(self, args_dict, output_directory, output_file_type):
+    def __init__(self, args_dict, output_directory):
         self.args_dict        = args_dict
-        if output_directory[-1] == "/"
+        if output_directory[-1] == "/":
             self.output_directory = output_directory
         else:
             self.output_directory = output_directory+'/'
@@ -47,12 +47,12 @@ class AbstractSegmenter(object):
         raise RuntimeError("Abstract not implemented yet")
 
     def store_output(self, output, meta_data, output_file_directory):
-        if not d.has_key('name'):
+        if not meta_data.has_key('name'):
             raise RuntimeError("meta_data must specify a name string but didn't"\
                 .format(d))
 
-        name = d['name']
+        name = meta_data['name']
         meta_filename = output_file_directory+name+".json"
-        d['image'] = output.tolist()
-        save_json(meta_filename, d)
+        meta_data['image'] = output.tolist()
+        save_json(meta_filename, meta_data)
         return meta_filename
