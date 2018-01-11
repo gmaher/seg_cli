@@ -1,5 +1,6 @@
 from util import save_output, save_json, mkdir
 import numpy as np
+from tqdm import tqdm
 
 class AbstractSegmenter(object):
     def __init__(self, args_dict, output_directory):
@@ -9,13 +10,9 @@ class AbstractSegmenter(object):
         else:
             self.output_directory = output_directory+'/'
 
-        self.output_file_directory = self.output_directory+'output/'
-        mkdir(self.output_file_directory)
-
     def run(self, path_points):
-        f = open(self.output_directory+'output_files.txt','w')
 
-        for d in path_points:
+        for d in tqdm(path_points):
 
             #either d has the image or references it
             if d.has_key("image"):
@@ -31,11 +28,8 @@ class AbstractSegmenter(object):
             #output is a numpy array
             output = self.process_image(image, d)
 
-            filename = self.store_output(output, d, self.output_file_directory)
+            filename = self.store_output(output, d, self.output_directory)
 
-            f.write(filename+'\n')
-
-        f.close()
 
     def process_arguments(self,args_dict):
         raise RuntimeError("Abstract not implemented yet")
@@ -46,13 +40,13 @@ class AbstractSegmenter(object):
     def process_image(self, image, meta_data):
         raise RuntimeError("Abstract not implemented yet")
 
-    def store_output(self, output, meta_data, output_file_directory):
+    def store_output(self, output, meta_data, output_directory):
         if not meta_data.has_key('name'):
             raise RuntimeError("meta_data must specify a name string but didn't"\
                 .format(d))
 
         name = meta_data['name']
-        meta_filename = output_file_directory+name+".json"
+        meta_filename = output_directory+name+".json"
         meta_data['image'] = output.tolist()
         save_json(meta_filename, meta_data)
         return meta_filename

@@ -9,13 +9,13 @@ from seg_modules.path import SVPath
 #from modules.segment import SVSeg
 
 parser = argparse.ArgumentParser()
-parser.add_argument('points_list')
-parser.add_argument('output_directory')
-parser.add_argument('method')
-parser.add_argument('--m',nargs="*")
+parser.add_argument('jsons', nargs="+", help="json files to run on")
+parser.add_argument('-o', default=".", help="output directory")
+parser.add_argument('-a', help="algorithm to use")
+parser.add_argument('--m',nargs="*", help="algorithm arguments")
 args = parser.parse_args()
 
-args.output_directory = os.path.abspath(args.output_directory)
+args.o = os.path.abspath(args.o)
 
 #TODO: vtkExtractVOI to extract 2d/3d slices
 
@@ -28,16 +28,16 @@ else:
         raise RuntimeError("Uneven number of --m arguments provided: {}".format(args.m))
     args.m = args_to_dict(args.m)
 
-if not ".txt" in args.points_list:
-    raise RuntimeError("must supply a .txt file with point files in it as paths argument")
+# if not ".txt" in args.points_list:
+#     raise RuntimeError("must supply a .txt file with point files in it as paths argument")
 
-sv_path  = SVPath(args.points_list)
+sv_path  = SVPath(args.jsons)
 
 #Get method
-method = args.method
+method = args.a
 print "Using method {}".format(method)
 Segmenter_class = importlib.import_module(method).Segmenter
-segmenter = Segmenter_class(args.m,args.output_directory)
+segmenter = Segmenter_class(args.m,args.o)
 
 #get environment info
 env_info = {}

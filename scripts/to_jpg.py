@@ -3,6 +3,8 @@ from scipy.misc import imsave
 import os
 import json
 import numpy as np
+import matplotlib.pyplot as plt
+from tqdm import tqdm
 
 def load_json(fn):
     with open(fn) as f:
@@ -17,10 +19,15 @@ args = parser.parse_args()
 input_folder  = os.path.abspath(args.input_folder)
 output_folder = os.path.abspath(args.output_folder)
 
-for f in os.listdir(input_folder):
+for f in tqdm(os.listdir(input_folder)):
     inf = input_folder+"/"+f
     d   = load_json(inf)
     im  = np.array(d['image'])
 
     output_file = output_folder+"/"+d['name']+'.jpg'
-    imsave(output_file,im)
+#    imsave(output_file,im)
+    plt.figure()
+    plt.imshow(im, cmap='gray')
+    plt.colorbar()
+    plt.savefig(output_file, dpi=100)
+    plt.close()
