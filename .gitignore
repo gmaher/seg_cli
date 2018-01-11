@@ -1,5 +1,4 @@
 *.pyc
 /scratch
 /test
-/seg_plugins
 *.json

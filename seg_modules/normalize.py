@@ -24,8 +24,8 @@ class Segmenter(AbstractSegmenter):
         elif self.type == "max":
             image = (1.0*image - np.amin(image))/(np.amax(image)-np.amin(image))
         elif self.type == "window":
-            center = self.args_dict['center']
-            window = self.args_dict['window']
+            center = int(self.args_dict['center'])
+            window = int(self.args_dict['window'])
             image  = window_image(image,center,window)
         else:
             raise RuntimeError("Unsupported normalization type {}".format(self.type))
