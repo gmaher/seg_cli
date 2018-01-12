@@ -23,7 +23,7 @@ def convert_to_json_list(paths_file, output_directory,interval=1):
         save_json(fn, d[i])
     #    f.write(fn+"\n")
     #f.close()
-    return files_file
+    #return files_file
 
 def parsePathFile(fn):
     """

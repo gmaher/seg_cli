@@ -14,5 +14,5 @@ class Segmenter(AbstractSegmenter):
         p = meta_data['p']
         n = meta_data['n']
         x = meta_data['x']
-
+        meta_data['spacing'] = self.spacing
         return self.sv_image.get_reslice(self.ext, p, n, x, self.spacing)
